@@ -32,13 +32,27 @@ public class LoginServlet extends HttpServlet {
 			List<Admin> adminDetails = AdminDBUtil.getAdmin(userName);
 		request.setAttribute("adminDetails", adminDetails);		
 		
-		RequestDispatcher dis = request.getRequestDispatcher("home.jsp");
-		dis.forward(request, response);
+		 String userRole = adminDetails.get(0).getUserRole(); // Assuming userRole is a property in the Admin class
+
+         if ("admin".equals(userRole)) {
+             // Forward to admin page
+             RequestDispatcher adminDispatcher = request.getRequestDispatcher("home.jsp");
+             adminDispatcher.forward(request, response);
+         } else if ("employee".equals(userRole)) {
+             // Forward to employee page
+        	 int adminId = adminDetails.get(0).getId(); // Assuming getAdminId() returns the admin ID
+        	    request.setAttribute("adminId", adminId);
+
+        	 RequestDispatcher employeeDispatcher = request.getRequestDispatcher("employeeHomePage.jsp");
+        	 employeeDispatcher.forward(request, response);
+         }
+		
 		}else {
-			out.println("<script type = 'text/javascript'>");
-			out.println("alert('your username or password is incorrect');");
-			out.println("location=login.jsp'");
-			out.println("<script>");
+			   // Incorrect login
+			  out.println("<script type='text/javascript'>");
+			  out.println("window.alert('Your username or password is incorrect');");
+			  out.println("location='login.jsp'");
+			  out.println("</script>");
 			
 		}
 	}
