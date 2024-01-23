@@ -14,7 +14,14 @@
 		<servlet-name>login</servlet-name>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
-	
+	<servlet>
+		<servlet-name>taskinsert</servlet-name>
+		<servlet-class>com.taskmanage.TaskServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>taskinsert</servlet-name>
+		<url-pattern>/taskinsert</url-pattern>
+	</servlet-mapping>
 	
 	
 	
