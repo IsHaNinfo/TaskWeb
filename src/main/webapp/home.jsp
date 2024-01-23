@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="ISO-8859-1">
-    <title>Display Admins and Tasks</title>
+    <title>task view</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
@@ -200,9 +200,9 @@
         <div class="modal-content">
             <h4 class="modal-title text-center" style="color: #626262; width: 100%;">Add Task</h4>
             <div class="modal-body">
-                <form action="your_task_submit_action" method="post">
+                <form action="taskinsert" method="post">
                     <div class="form-group" style="margin-bottom: 25px">
-                        <input type="text" class="form-control" id="taskName" name="taskName" required placeholder="Enter task name">
+                        <input type="text" class="form-control" id="taskName" name="taskname" required placeholder="Enter task name">
                     </div>
 
                     <div class="form-group" style="margin-bottom: 25px">
@@ -213,7 +213,7 @@
                         <input type="date" class="form-control" id="date" name="date" required placeholder="Enter date">
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="background-color: #685CFE; width: 325px">Submit Task</button>
+                    <input type="submit" value="Submit Task"class="btn btn-primary" style="background-color: #685CFE; width: 325px">
                 </form>
             </div>
         </div>
