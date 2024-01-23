@@ -18,7 +18,7 @@ public class AdminDBUtil {
 		try {
 			con = DBConnect.getConnection();
 			stmt = con.createStatement();
-			String sql = "select * from admin where username='"+username+"' and password='"+password+"'";
+			String sql = "select * from users where username='"+username+"' and password='"+password+"'";
 			rs = stmt.executeQuery(sql);
 			
 			if(rs.next()) {
@@ -41,7 +41,7 @@ public class AdminDBUtil {
 		try {
 			con = DBConnect.getConnection();
 			stmt = con.createStatement();
-			String sql = "select * from admin where username = '"+username+"'";
+			String sql = "select * from users where username = '"+username+"'";
 			rs=stmt.executeQuery(sql);
 			while(rs.next()) {
 				int id= rs.getInt(1);
@@ -49,7 +49,8 @@ public class AdminDBUtil {
 				String email = rs.getString(3);
 				String userName =rs.getString(4);
 				String password = rs.getString(5);
-				Admin ad= new Admin(id,name,email,userName,password);
+				String userRole = rs.getString(6);
+				Admin ad = new Admin(id,name,email,userName,password,userRole);
 				admin.add(ad);
 				
 			}
