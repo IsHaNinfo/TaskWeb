@@ -101,6 +101,9 @@
             right: 10px;
             transform: translateY(-50%);
         }
+        .h4{
+        	color:#626262
+        }
     </style>
 </head>
 <body>
@@ -129,9 +132,9 @@
     <h4 class="taskname">Task View</h4>
     <div style="margin-left:700px;">
         <!-- Bootstrap button to trigger modal -->
-        <button class="btn btn-info" onclick="viewEmployeeAssigned()">View Employee Assigned with Task</button>
+        <button class="btn btn-info"  id="viewEmployeeBtn" >View Employee Assigned with Task</button>
         <button class="btn btn-primary" data-toggle="modal" data-target="#taskModal">Add Task</button>
-        <button class="btn btn-secondary" data-toggle="modal" data-target="#employeeModal">Add Employee</button>
+        <button class="btn btn-secondary" data-toggle="modal" data-target="#employeeModal">Enter User</button>
     </div>
 </div>
 
@@ -171,7 +174,7 @@
 
 <!-- Bootstrap Modal for Task Details -->
 <div class="modal" id="taskDetailsModal">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
                 <p> Use a programming language with HTTP library (e.g., Python with requests) to make a simple API request (e.g., weather API) and display the response.</p>
@@ -196,24 +199,24 @@
 
 <!-- Bootstrap Modal for Add Task -->
 <div class="modal" id="taskModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <h4 class="modal-title text-center" style="color: #626262; width: 100%;">Add Task</h4>
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 550px; max-height:600px; ">
+        <div class="modal-content" style="border-radius: 10px;">
+            <h4 class="modal-title text-center" style="color: #626262; width: 100%; margin-bottom:30px; margin-top:15px;">Add Task</h4>
             <div class="modal-body">
                 <form action="taskinsert" method="post">
                     <div class="form-group" style="margin-bottom: 25px">
-                        <input type="text" class="form-control" id="taskName" name="taskname" required placeholder="Enter task name">
+                        <input type="text" class="form-control" id="taskName" name="taskname" required placeholder="Enter task name" style="height:50px;">
                     </div>
 
                     <div class="form-group" style="margin-bottom: 25px">
-                        <textarea class="form-control" id="description" name="description" required placeholder="Enter description"></textarea>
+                        <textarea class="form-control" id="description" name="description" required placeholder="Enter description" ></textarea>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 25px">
-                        <input type="date" class="form-control" id="date" name="date" required placeholder="Enter date">
+                        <input type="date" class="form-control" id="date" name="date" required placeholder="Enter date" style="height:50px;">
                     </div>
 
-                    <input type="submit" value="Submit Task"class="btn btn-primary" style="background-color: #685CFE; width: 325px">
+                    <input type="submit" value="Submit Task"class="btn btn-primary" style="background-color: #685CFE; width: 370px">
                 </form>
             </div>
         </div>
@@ -222,24 +225,36 @@
 
 <!-- Bootstrap Modal for Add Employee -->
 <div class="modal" id="employeeModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <h4 class="modal-title text-center" style="color: #626262; width: 100%;">Add Employee</h4>
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 550px; max-height:600px;">
+        <div class="modal-content" style="border-radius: 10px;">
+            <h4 class="modal-title text-center" style="color: #626262; width: 100%; margin-bottom:30px; margin-top:15px;">Enter User</h4>
             <div class="modal-body">
-                <form action="your_employee_submit_action" method="post">
+                <form action="userinsert" method="post">
+                <div class="form-group" style="margin-bottom: 25px;">
+                        <input type="text" class="form-control" id="name" name="name" required placeholder="Enter  name" style="height:50px;">
+                    </div>
                     <div class="form-group" style="margin-bottom: 25px;">
-                        <input type="text" class="form-control" id="employeeName" name="employeeName" required placeholder="Enter employee name">
+                        <input type="text" class="form-control" id="username" name="username" required placeholder="Enter  username" style="height:50px;">
                     </div>
 
                     <div class="form-group" style="margin-bottom: 25px;">
-                        <input type="email" class="form-control" id="employeeEmail" name="employeeEmail" required placeholder="Enter employee email">
+                        <input type="email" class="form-control" id="email" name="email" required placeholder="Enter  email" style="height:50px;" >
+                    </div>
+                    
+                     <div class="form-group" style="margin-bottom: 25px;">
+                        <input type="password" class="form-control" id="password" name="password" required placeholder="Enter  password" style="height:50px;" >
                     </div>
 
-                    <div class="form-group" style="margin-bottom: 25px;">
-                        <input type="text" class="form-control" id="job" name="job" required placeholder="Enter job">
-                    </div>
+                   <div class="form-group">
+					    <select class="form-control" id="userrole" name="userrole" style="height:50px;">
+					        <option value="" disabled selected>Select User Role</option>
+					        <option value="admin">Admin</option>
+					        <option value="employee">Employee</option>
+					    </select>
+					</div>
 
-                    <button type="submit" class="btn btn-primary" style="background-color: #685CFE; width: 325px;">Submit Employee</button>
+
+                    <input type="submit" name="submit" class="btn btn-primary" style="background-color: #685CFE; width: 370px;" value="Submit User">
                 </form>
             </div>
         </div>
@@ -268,6 +283,16 @@
             hideUserDetails();
         }
     }
+    
+    var viewEmployeeBtn = document.getElementById("viewEmployeeBtn");
+
+    // Add a click event listener to the button
+    viewEmployeeBtn.addEventListener("click", function() {
+        // Redirect to the "viewprogress" page
+        window.location.href = "viewprogress.jsp";
+    });
+    
+    
 </script>
 </body>
 </html>

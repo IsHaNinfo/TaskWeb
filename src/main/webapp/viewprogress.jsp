@@ -46,6 +46,7 @@
     </div>
 </nav>
 
+
 <div class="container mt-5">
     <table class="table custom-table">
         <thead>
@@ -76,25 +77,25 @@
 </div>
 
 <div class="modal" id="taskdetailModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <h4 class="modal-title text-center" style="color: #626262; width: 100%;">Edit Details</h4>
+    <div class="modal-dialog modal-dialog-centered"  style="max-width: 550px; max-height:600px;" >
+        <div class="modal-content" style="border-radius: 10px;">
+            <h4 class="modal-title text-center" style="color: #626262; width: 100%; margin-bottom:30px; margin-top:15px;">Edit Details</h4>
             <div class="modal-body">
                 <form action="your_employee_submit_action" method="post">
                     <div class="form-group" style="margin-bottom: 25px;">
-                        <input type="text" class="form-control" id="title" name="title" required placeholder="Enter your title">
+                        <input type="text" class="form-control" id="title" name="title" required placeholder="Enter your title"  style="height:50px;">
                     </div>
 
                     <div class="form-group" style="margin-bottom: 25px;">
-                        <input type="email" class="form-control" id="description" name="description" required placeholder="Enter your description">
+                        <input type="email" class="form-control" id="description" name="description" required placeholder="Enter your description" style="height:50px;">
                     </div>
 
                     <div class="form-group" style="margin-bottom: 25px;">
-                        <input type="text" class="form-control" id="date" name="date" required placeholder="Enter date">
+                        <input type="text" class="form-control" id="date" name="date" required placeholder="Enter date" style="height:50px;">
                     </div>
                     
                      <div class="form-group">
-                            <select class="form-control" id="employeeDropdown">
+                            <select class="form-control" id="employeeDropdown"  style="height:50px;">
                                 <option value="employee1">Employee 1</option>
                                 <option value="employee2">Employee 2</option>
                             </select>

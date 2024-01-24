@@ -22,7 +22,14 @@
 		<servlet-name>taskinsert</servlet-name>
 		<url-pattern>/taskinsert</url-pattern>
 	</servlet-mapping>
-	
+	<servlet>
+		<servlet-name>userinsert</servlet-name>
+		<servlet-class>com.taskmanage.UserInsertServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>userinsert</servlet-name>
+		<url-pattern>/userinsert</url-pattern>
+	</servlet-mapping>
 	
 	
 	
