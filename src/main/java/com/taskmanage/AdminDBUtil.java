@@ -60,5 +60,26 @@ public class AdminDBUtil {
 		
 		return admin;
 	}
+	
+	public static boolean insertUser(String name,String email,String username,String password,String userrole) {
+		boolean isSucces = false;
+		
+		try {
+			con = DBConnect.getConnection();
+			stmt = con.createStatement();
+			String sql = "insert into users values(0,'" + name + "','" + email + "','" + username + "' , '"+password+"' , '"+userrole+"')";
+            int rs = stmt.executeUpdate(sql);
+            
+            if (rs > 0) {
+                isSuccess = true;
+            } else {
+                isSuccess = false;
+            }
+		}catch(Exception e) {
+			e.printStackTrace();
+
+		}
+		return isSucces;
+	}
 
 }
