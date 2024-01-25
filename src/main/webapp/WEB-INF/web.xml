@@ -66,6 +66,40 @@
 		<url-pattern>/updatetask</url-pattern>
 	</servlet-mapping>
 	
+	<!-- Get task by user id -->
+	
+	<servlet>
+		<servlet-name>getTaskByUserId</servlet-name>
+		<servlet-class>com.taskmanage.GetTaskByUserId</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>getTaskByUserId</servlet-name>
+		<url-pattern>/gettaskbyuserid</url-pattern>
+	</servlet-mapping>
+	
+	
+		<!-- Get task by user id -->
+	
+	<servlet>
+		<servlet-name>updateTaskStatus</servlet-name>
+		<servlet-class>com.taskmanage.UpdateTaskStatus</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>updateTaskStatus</servlet-name>
+		<url-pattern>/updateTaskStatus</url-pattern>
+	</servlet-mapping>
+	
+	
+		<!-- Delete Task -->
+	
+	<servlet>
+		<servlet-name>deleteTask</servlet-name>
+		<servlet-class>com.taskmanage.DeleteTaskServelet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>deleteTask</servlet-name>
+		<url-pattern>/deletetask</url-pattern>
+	</servlet-mapping>
 	
 	
 	

@@ -40,8 +40,8 @@ public class LoginServlet extends HttpServlet {
              adminDispatcher.forward(request, response);
          } else if ("employee".equals(userRole)) {
              // Forward to employee page
-        	 int adminId = adminDetails.get(0).getId(); // Assuming getAdminId() returns the admin ID
-        	    request.setAttribute("adminId", adminId);
+        	 int userId = adminDetails.get(0).getId(); // Assuming getAdminId() returns the admin ID
+        	    request.setAttribute("userId", userId);
 
         	 RequestDispatcher employeeDispatcher = request.getRequestDispatcher("employeeHomePage.jsp");
         	 employeeDispatcher.forward(request, response);

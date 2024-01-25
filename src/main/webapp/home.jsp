@@ -143,7 +143,7 @@
         <div style="margin-left:700px;">
             <!-- Bootstrap buttons to trigger modals -->
             <button class="btn btn-info" id="viewEmployeeBtn">View Employee Assigned with Task</button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#taskModal">Add Task</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#taskModalAdd">Add Task</button>
             <button class="btn btn-secondary" data-toggle="modal" data-target="#employeeModal">Enter User</button>
         </div>
     </div>
@@ -156,12 +156,60 @@
 	</form>
         <!-- Iterate over the list of tasks and generate HTML for each task -->
         <c:forEach var="task" items="${tasks}">
-            <div class="task" style="cursor: pointer;" data-toggle="modal" data-target="#taskModal${task.id}">
-                ${task.taskname}
+            <div class="task" style="cursor: pointer;">
+            <div
+            	class ="edit-button"
+                data-bs-toggle="modal" data-bs-target="#taskModal"
+                data-id = "${task.id}"
+				data-task-name="${task.taskname}"
+				data-description="${task.description}"
+				data-date="${task.date}"
+				data-comment="${task.comment}"
+				data-status = "${task.status}"
+				data-uid="${task.uid}"
+            >
+                <span >${task.taskname}</span>
+                
         		<i class="arrow-icon fas fa-angle-double-right" style="color: darkblue"></i>
-            </div>
-            <!-- Modal for each task -->
- 				<div class="modal fade task-modal" id="taskModal${task.id}" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">		        <div class="modal-dialog" role="document">
+        		<button type="button" class="btn btn-danger ms-1 delete-button" data-id="${task.id}">Remove task</button>
+        		
+        		</div>
+            	
+            	
+            </div> 
+        </c:forEach>
+
+    </div>
+    
+    <script>
+	    $(document).ready(function () {
+	        // When the "Edit" button is clicked, extract the data attributes and populate the modal fields
+	        $(".edit-button").click(function () {
+	            var modal = $("#taskModal");
+	            var id = $(this).data("id");
+	            var taskName = $(this).data("task-name");
+	            var description = $(this).data("description");
+	            var date = $(this).data("date");
+	            var comment = $(this).data("comment");
+	            var status = $(this).data("status");
+	            var uid = $(this).data("uid");
+		
+	            modal.find("#editID").val(id);
+	            modal.find("#editTaskName").val(taskName);
+	            modal.find("#editDescription").val(description);
+	            modal.find("#editDate").val(date);
+	            modal.find("#editComment").val(comment);
+	            modal.find("#editStatus").val(status);
+	            modal.find("#existingDate").val(date);
+	            modal.find("#existingState").val(status);
+	        });
+	    });
+	</script>
+    
+    
+     <!-- Modal for each task -->
+ 				<div class="modal fade task-modal" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">		        
+ 				<div class="modal-dialog" role="document">
 		            <div class="modal-content">
 		                <div class="modal-header">
 		                    <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
@@ -175,7 +223,6 @@
 		                		<div class="form-group">
 					            <label for="editId">Task ID</label>
 					            <input type="text" class="form-control" id="editID" name="editID"  placeholder="${task.id}" value="${task.id}" readonly>
-					             <div id="enterResultHelp" class="form-text" style="color:red">Not editable</div>
 					          </div>
 							  <div class="form-group">
 							    <label for="taskName">Task name</label>
@@ -188,7 +235,7 @@
 							  </div>
 							  <div class="form-group">
 							    <label for="dueDate">Completion date</label>
-							    <input type="text" class="form-control"  placeholder="${task.date}" readonly>
+							    <input type="text" class="form-control"  id ="existingDate" placeholder="${task.date}" readonly>
 							 	 <label for="dueDate">Select new date</label>
 							 	 <input type="date" class="form-control" id="editDate" name="editDate" placeholder="${task.date}" value="${task.date}">
 							  </div>
@@ -197,7 +244,8 @@
 							    <input type="text" class="form-control" id="editComment" name="editComment" placeholder="${task.comment}" value="${task.comment}" readonly>
 							  </div>
 							   <div class="form-group">
-							   <label for="status">Current Status : ${task.status}</label> <br/>
+							   <label for="status">Current Status</label>
+							   <input type="text" class="form-control"  id ="existingState"  readonly>
 							    <label for="status">Select new status</label>
 							  	<select class="form-control" id="editStatus" name="editStatus">
 							  		<option>Active</option>
@@ -210,7 +258,6 @@
 		                            <label for="employee">Assign employee to the task</label>
 		                            <select class="form-control" id="editEmployee" name="editEmployee"></select>
 		                        </div>
-							    <input type="text" class="form-control" id="editUID" name="editUID" placeholder="${task.uid}" value="${task.uid}">
 							  </div>
 
 							
@@ -225,8 +272,9 @@
 		            </div>
 		        </div>
 		    </div>
+		
 		    
-		    <script>
+  <script>
         // JavaScript/jQuery code for making AJAX request
         $(document).ready(function() {
             // Use a class selector for the modal
@@ -243,7 +291,7 @@
                         console.log(data);
                         // Populate the select element with employee details
                         var selectElement = $('#editEmployee');
-                        selectElement.empty(); // Clear existing options
+                      	selectElement.empty(); // Clear existing options
 
                         // Iterate over the received data and append options to select
                         for (var i = 0; i < data.length; i++) {
@@ -253,6 +301,7 @@
                                 text: employee.name
                             }));
                         }
+                      	
 
                     },
                     error: function() {
@@ -262,13 +311,8 @@
                 });
             });
         });
-    </script>
-            
-        </c:forEach>
-
         
-    </div>
-  
+    </script>
 <!-- Bootstrap Modal for Task Details -->
 <div class="modal" id="taskDetailsModal">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered" role="document">
@@ -295,7 +339,7 @@
 </div>
 
 <!-- Bootstrap Modal for Add Task -->
-<div class="modal" id="taskModal">
+<div class="modal" id="taskModalAdd">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 550px; max-height:600px; ">
         <div class="modal-content" style="border-radius: 10px;">
             <h4 class="modal-title text-center" style="color: #626262; width: 100%; margin-bottom:30px; margin-top:15px;">Add Task</h4>
@@ -402,7 +446,7 @@
             var comment = document.getElementById("editComment").value;
             var status = document.getElementById("editStatus").value;
             var employee = document.getElementById("editEmployee").value;
-            var uid = document.getElementById("editUID").value;
+            
 
             // Check if the user entered new values, if not, set existing values
             taskName = taskName === "" ? "${task.taskname}" : taskName;
@@ -416,12 +460,42 @@
             document.getElementById("editDate").value = date;
             document.getElementById("editComment").value = comment;
             document.getElementById("editStatus").value = status; // Set existing status
-            document.getElementById("editUID").value = uid;
+            document.getElementById("editEmployee").value = employee;
 
             // Now you can submit the form
             document.getElementById("editForm").submit();
         }
     </script>
+    
+    <!-- to delete the data -->
+	<script>
+    $(document).ready(function () {
+        $(".delete-button").click(function () {
+            var id = $(this).data("id");
+            var confirmation = confirm("Are you sure you want to delete this record?");
+
+            if (confirmation) {
+                $.ajax({
+                    url: "deletetask",
+                    type: "POST",
+                    data: { id: id },
+                    success: function(response) {
+                    	
+                        // Handle the response from the servlet, e.g., show a success message
+                        alert("Record deleted successfully"); 
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
+                    },
+                    error: function() {
+                        // Handle any errors
+                        alert("Error deleting record");
+                    }
+                });
+            }
+        });
+    });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>  
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>

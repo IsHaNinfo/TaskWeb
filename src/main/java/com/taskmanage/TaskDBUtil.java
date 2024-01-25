@@ -122,4 +122,89 @@ public class TaskDBUtil {
 		
 		return isSuccess;
 	}
+    
+    //get task by user id
+    public static List<Task> getTaskDetailsById(String Id) {
+
+        int convertedID = Integer.parseInt(Id);
+        ArrayList<Task> tas = new ArrayList<>();
+        try {
+            con = DBConnect.getConnection();
+            stmt = con.createStatement();
+            String sql = "select * from task where uid='" + convertedID + "'";
+            rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String taskname = rs.getString(2);
+                String description = rs.getString(3);
+                String date = rs.getString(4);
+                String status = rs.getString(5);
+                int uid = rs.getInt(6);
+                String comment = rs.getString(7);
+                
+                Task t = new Task(id, taskname, description, date , status, uid, comment);
+                tas.add(t);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tas;
+
+    }
+    
+    //update task
+    public static boolean updateTaskSatus(int id,String status) {
+		boolean isSuccess = false;
+		System.out.println(id);
+		
+		//db connection
+		try {
+			  con = DBConnect.getConnection();
+	          stmt = con.createStatement();
+			String sql = "update task set status = '"+status+"' " + "where id='"+id+"'";
+			int result = stmt.executeUpdate(sql);
+			
+			if(result > 0) {
+				isSuccess = true;
+			}else {
+				isSuccess = false;
+			}
+			
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return isSuccess;
+	}
+    
+    //delete task
+	public static boolean deleteTaskData(String id) {
+		boolean isSuccess = false;
+		int convertId = Integer.parseInt(id);
+		
+		try {
+			con = DBConnect.getConnection();
+			stmt = con.createStatement();
+			String sql = "delete from task where id = '"+convertId+"' ";
+			int result = stmt.executeUpdate(sql);
+			
+			if (result > 0) {
+				isSuccess = true;
+			}else {
+				isSuccess = false;
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return isSuccess;
+	}
+    
 }

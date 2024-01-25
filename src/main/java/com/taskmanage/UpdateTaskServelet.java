@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jasper.tagplugins.jstl.core.Out;
 
+import com.google.gson.Gson;
+
 /**
  * Servlet implementation class UpdateTask
  */
@@ -24,6 +26,10 @@ public class UpdateTaskServelet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		
+		String pageName = request.getParameter("employeePage");
+		
+		
+		
 		System.out.print("Method calld update");;
 		String id = request.getParameter("editID");
 	    int taskIdAsInt = Integer.parseInt(id);
@@ -33,22 +39,32 @@ public class UpdateTaskServelet extends HttpServlet {
 		String date = request.getParameter("editDate");
 		String status = request.getParameter("editStatus");
 		System.out.println(status);
-//		String employeeId = request.getParameter("editEmployee");
-//	    int uid = Integer.parseInt(employeeId);
+		String employeeId = request.getParameter("editEmployee");
+	    int uid = Integer.parseInt(employeeId);
 //	    System.out.println(uid);
-		int uid = 1;
+//		int uid = 1;
 		String comment = "pending";
 		
 		boolean isUpdated = TaskDBUtil.updateTaskData(taskIdAsInt , taskname, description, date, status,uid,comment);
 		
+		
+		
 		if(isUpdated == true) {
 			
+			if("employeePage".equals(pageName)) {
+				   	System.out.println("data updated. Forwarding to home.jsp");
+				    request.setAttribute("userId", uid);
+
+				    RequestDispatcher employeeDispatcher = request.getRequestDispatcher("employeeHomePage.jsp");
+		        	 employeeDispatcher.forward(request, response);
+			}else {
+
 				out.println("<script type='text/javascript'>");
 			  out.println("window.alert('Task updated successfully');");
 			  out.println("location='updatetask.jsp'");
 			  out.println("</script>");
 			
-			System.out.println("Updateddddddddddddddd");
+			System.out.println("Task Data updated successfully");
 			List<Task> tasks = TaskDBUtil.getAllTasks();
 
 			if (!tasks.isEmpty()) {
@@ -64,26 +80,40 @@ public class UpdateTaskServelet extends HttpServlet {
 			    dis2.forward(request, response);
 			}
 //			
+				
+			}
+			
 		}else {
+			if("employeePage".equals(pageName)) {
+			   	System.out.println("Status not updated. Forwarding to employee.jsp");
+			    request.setAttribute("userId", uid);
+
+			    RequestDispatcher employeeDispatcher = request.getRequestDispatcher("employeeHomePage.jsp");
+	        	 employeeDispatcher.forward(request, response);
+		}else {
+
 			out.println("<script type='text/javascript'>");
-			  out.println("window.alert('Error occured while updating.Please try again later');");
-			  out.println("location='home.jsp'");
+			  out.println("window.alert('Task updated successfully');");
+			  out.println("location='updatetask.jsp'");
 			  out.println("</script>");
-			System.out.println("nottt   Updateddddddddddddddd");
+			
+			System.out.println("Task Data updated successfully");
 			List<Task> tasks = TaskDBUtil.getAllTasks();
-
+	
 			if (!tasks.isEmpty()) {
-			    System.out.println("data is not updated. Forwarding to home.jsp");
-			    // Set the list of tasks as an attribute to be accessed in home.jsp
+			    System.out.println("data updated. Forwarding to home.jsp");
 			    request.setAttribute("tasks", tasks);
-
+	
 			    RequestDispatcher dis = request.getRequestDispatcher("home.jsp");
 			    dis.forward(request, response);
 			} else {
 			    System.out.println("Condition not updated. Forwarding to home.jsp");
-
+	
 			    RequestDispatcher dis2 = request.getRequestDispatcher("home.jsp");
 			    dis2.forward(request, response);
+			}
+	//		
+				
 			}
 		}
 	}
