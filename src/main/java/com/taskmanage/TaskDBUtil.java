@@ -11,17 +11,18 @@ public class TaskDBUtil {
     private static Statement stmt = null;
     private static ResultSet rs = null;
 
-    public static boolean insertTask(String taskname, String description, String date) {
+    public static boolean insertTask(String taskname, String description, String date ,String status , int uid ,String comment) {
 
         boolean isSuccess = false;
 
         try {
             con = DBConnect.getConnection();
             stmt = con.createStatement();
-            String sql = "insert into task values(0,'" + taskname + "','" + description + "','" + date + "')";
+            String sql = "insert into task values(0,'" + taskname + "','" + description + "','" + date + "','" + status + "','" + uid + "','" + comment + "')";
             int rs = stmt.executeUpdate(sql);
 
             if (rs > 0) {
+            	System.out.println("saved");
                 isSuccess = true;
             } else {
                 isSuccess = false;
@@ -49,8 +50,11 @@ public class TaskDBUtil {
                 String taskname = rs.getString(2);
                 String description = rs.getString(3);
                 String date = rs.getString(4);
-
-                Task t = new Task(id, taskname, description, date);
+                String status = rs.getString(5);
+                int uid = rs.getInt(6);
+                String comment = rs.getString(7);
+                
+                Task t = new Task(id, taskname, description, date , status, uid, comment);
                 tas.add(t);
 
             }
@@ -76,8 +80,11 @@ public class TaskDBUtil {
                 String taskname = rs.getString(2);
                 String description = rs.getString(3);
                 String date = rs.getString(4);
-
-                Task t = new Task(id, taskname, description, date);
+                String status = rs.getString(5);
+                int uid = rs.getInt(6);
+                String comment = rs.getString(7);
+                
+                Task t = new Task(id, taskname, description, date , status, uid, comment);
                 tasks.add(t);
             }
 
@@ -87,4 +94,32 @@ public class TaskDBUtil {
 
         return tasks;
     }
+    
+    //update task
+    public static boolean updateTaskData(int id,String taskname, String description, String date ,String status , int uid ,String comment) {
+		boolean isSuccess = false;
+		System.out.println(id);
+		
+		//db connection
+		try {
+			  con = DBConnect.getConnection();
+	          stmt = con.createStatement();
+			String sql = "update task set taskname = '"+taskname+"' , description = '"+description+"',date = '"+date+"' , status = '"+status+"',uid = '"+uid+"',comment = '"+comment+"' " + "where id='"+id+"'";
+			int result = stmt.executeUpdate(sql);
+			
+			if(result > 0) {
+				isSuccess = true;
+			}else {
+				isSuccess = false;
+			}
+			
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return isSuccess;
+	}
 }

@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+
+   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+   <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +15,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <!-- Add Bootstrap JS and Popper.js scripts -->
+	
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>	
+	
     
     <style type="text/css">
         body {
@@ -113,6 +122,7 @@
         <i class="navbar-user-icon fas fa-user" onclick="showUserDetails()"></i>
     </div>
 </nav>
+ 
 
 <!-- User Details Card -->
 <div class="details" id="userDetailsCard">
@@ -127,51 +137,138 @@
         </div>
     </c:forEach>
 </div>
-
-<div class="top-buttons pagename">
-    <h4 class="taskname">Task View</h4>
-    <div style="margin-left:700px;">
-        <!-- Bootstrap button to trigger modal -->
-        <button class="btn btn-info"  id="viewEmployeeBtn" >View Employee Assigned with Task</button>
-        <button class="btn btn-primary" data-toggle="modal" data-target="#taskModal">Add Task</button>
-        <button class="btn btn-secondary" data-toggle="modal" data-target="#employeeModal">Enter User</button>
-    </div>
-</div>
-
-
-<div class="shadow-card">
-    <div class="task">
-		Create a program that generates and prints a random number between 1 and 100
-    <i class=" arrow-icon fas fa-angle-double-right" style="color: darkblue;"></i>
-    </div>
-    <div class="task">
-		Develop a script to read a text file, count the number of words, and print the result.   
-    <i class=" arrow-icon fas fa-angle-double-right" style="color: darkblue;"></i>
-    </div>
-        <div class="task">
-		Implement a simple calculator program that can perform addition, subtraction, multiplication, and division    
-    <i class=" arrow-icon fas fa-angle-double-right" style="color: darkblue;"></i>
+	
+   <div class="top-buttons pagename">
+        <h4 class="taskname">Task View</h4>
+        <div style="margin-left:700px;">
+            <!-- Bootstrap buttons to trigger modals -->
+            <button class="btn btn-info" id="viewEmployeeBtn">View Employee Assigned with Task</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#taskModal">Add Task</button>
+            <button class="btn btn-secondary" data-toggle="modal" data-target="#employeeModal">Enter User</button>
         </div>
-        <div class="task">
-		Create a function that checks if a given number is prime.    
-    <i class=" arrow-icon fas fa-angle-double-right" style="color: darkblue;"></i>
-		</div>
-        <div class="task">
-		Develop a script that prints the current date and time.   
-    <i class=" arrow-icon fas fa-angle-double-right" style="color: darkblue;"></i>
-		  </div>
-        <div class="task">
-		Write a program to print a pattern, such as a triangle or square, using loops.
-    <i class=" arrow-icon fas fa-angle-double-right" style="color: darkblue;"></i>
-		    </div>
-    
-        <div class="task" data-toggle="modal" data-target="#taskDetailsModal">
-    Use a programming language with HTTP library (e.g., Python with requests) to make a simple API request (e.g., weather API) and display the response.
-    <i class="arrow-icon fas fa-angle-double-right" style="color: darkblue;"></i>
-</div>
-    <!-- Add more tasks as needed -->
-</div>
+    </div>
 
+
+
+   <div class="shadow-card">
+   <form action ="getalltask" method="get">
+		<button type="submit" class="btn btn-primary" id="viewAllTask">CLick to see All task</button>
+	</form>
+        <!-- Iterate over the list of tasks and generate HTML for each task -->
+        <c:forEach var="task" items="${tasks}">
+            <div class="task" style="cursor: pointer;" data-toggle="modal" data-target="#taskModal${task.id}">
+                ${task.taskname}
+        		<i class="arrow-icon fas fa-angle-double-right" style="color: darkblue"></i>
+            </div>
+            <!-- Modal for each task -->
+ 				<div class="modal fade task-modal" id="taskModal${task.id}" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">		        <div class="modal-dialog" role="document">
+		            <div class="modal-content">
+		                <div class="modal-header">
+		                    <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
+		                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                        <span aria-hidden="true">&times;</span>
+		                    </button>
+		                </div>
+		                <form action="updatetask" method="post" id="editForm">
+		                <div class="modal-body">
+		                
+		                		<div class="form-group">
+					            <label for="editId">Task ID</label>
+					            <input type="text" class="form-control" id="editID" name="editID"  placeholder="${task.id}" value="${task.id}" readonly>
+					             <div id="enterResultHelp" class="form-text" style="color:red">Not editable</div>
+					          </div>
+							  <div class="form-group">
+							    <label for="taskName">Task name</label>
+							    <input type="text" class="form-control" id="editTaskName" name="editTaskName" aria-describedby="emailHelp" placeholder="${task.taskname}" value="${task.taskname}">
+							    <small id="emailHelp" class="form-text text-muted"></small>
+							  </div>
+							  <div class="form-group">
+							    <label for="Description">Description</label>
+							    <input type="text" class="form-control" id="editDescription" name="editDescription" placeholder="${task.description}" value="${task.description}">
+							  </div>
+							  <div class="form-group">
+							    <label for="dueDate">Completion date</label>
+							    <input type="text" class="form-control"  placeholder="${task.date}" readonly>
+							 	 <label for="dueDate">Select new date</label>
+							 	 <input type="date" class="form-control" id="editDate" name="editDate" placeholder="${task.date}" value="${task.date}">
+							  </div>
+							  <div class="form-group">
+							    <label for="dueDate">Comment</label>
+							    <input type="text" class="form-control" id="editComment" name="editComment" placeholder="${task.comment}" value="${task.comment}" readonly>
+							  </div>
+							   <div class="form-group">
+							   <label for="status">Current Status : ${task.status}</label> <br/>
+							    <label for="status">Select new status</label>
+							  	<select class="form-control" id="editStatus" name="editStatus">
+							  		<option>Active</option>
+							  		<option>Resolve</option>
+							  		<option>Close</option>
+							  	</select>
+							  </div>
+							   <div class="form-group">
+							    <div class="form-group">
+		                            <label for="employee">Assign employee to the task</label>
+		                            <select class="form-control" id="editEmployee" name="editEmployee"></select>
+		                        </div>
+							    <input type="text" class="form-control" id="editUID" name="editUID" placeholder="${task.uid}" value="${task.uid}">
+							  </div>
+
+							
+		                </div>
+		              
+		                
+		                <div class="modal-footer">
+		                	<button type="button" class="btn btn-primary" onclick="submitForm()">Save changes</button>
+		                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		                </div>
+		                </form>
+		            </div>
+		        </div>
+		    </div>
+		    
+		    <script>
+        // JavaScript/jQuery code for making AJAX request
+        $(document).ready(function() {
+            // Use a class selector for the modal
+            $('.task-modal').on('shown.bs.modal', function() {
+                // Extract task ID from modal ID
+                var taskId = $(this).attr('id').replace('taskModal', '');
+
+                // Make AJAX request to get all employee details
+                $.ajax({
+                    type: 'GET',
+                    url: 'getAllEmployeeSeverlet',
+                    dataType: 'json', // Assuming the response is in JSON format
+                    success: function(data) {
+                        console.log(data);
+                        // Populate the select element with employee details
+                        var selectElement = $('#editEmployee');
+                        selectElement.empty(); // Clear existing options
+
+                        // Iterate over the received data and append options to select
+                        for (var i = 0; i < data.length; i++) {
+                            var employee = data[i];
+                            selectElement.append($('<option>', {
+                                value: employee.id,
+                                text: employee.name
+                            }));
+                        }
+
+                    },
+                    error: function() {
+                        // Handle error
+                        console.error('Error fetching employee details');
+                    }
+                });
+            });
+        });
+    </script>
+            
+        </c:forEach>
+
+        
+    </div>
+  
 <!-- Bootstrap Modal for Task Details -->
 <div class="modal" id="taskDetailsModal">
     <div class="modal-dialog modal-dialog-scrollable modal-lg modal-dialog-centered" role="document">
@@ -261,10 +358,7 @@
     </div>
 </div>
 
-<!-- Add Bootstrap JS and Popper.js scripts -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 
 <script type="text/javascript">
     // Function to show user details card
@@ -294,5 +388,43 @@
     
     
 </script>
+
+
+
+
+
+<script>
+        function submitForm() {
+            // Get user-entered values
+            var taskName = document.getElementById("editTaskName").value;
+            var description = document.getElementById("editDescription").value;
+            var date = document.getElementById("editDate").value;
+            var comment = document.getElementById("editComment").value;
+            var status = document.getElementById("editStatus").value;
+            var employee = document.getElementById("editEmployee").value;
+            var uid = document.getElementById("editUID").value;
+
+            // Check if the user entered new values, if not, set existing values
+            taskName = taskName === "" ? "${task.taskname}" : taskName;
+            description = description === "" ? "${task.description}" : description;
+            date = date === "" ? "${task.date}" : date;
+            comment = comment === "" ? "${task.comment}" : comment;
+
+            // Set the values back to the form fields
+            document.getElementById("editTaskName").value = taskName;
+            document.getElementById("editDescription").value = description;
+            document.getElementById("editDate").value = date;
+            document.getElementById("editComment").value = comment;
+            document.getElementById("editStatus").value = status; // Set existing status
+            document.getElementById("editUID").value = uid;
+
+            // Now you can submit the form
+            document.getElementById("editForm").submit();
+        }
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>  
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

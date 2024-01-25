@@ -81,5 +81,31 @@ public class AdminDBUtil {
 		}
 		return isSucces;
 	}
+	
+	
+	public static List<Admin> getAllEmployee() {
+        ArrayList<Admin> employees = new ArrayList<>();
+
+        try {
+            con = DBConnect.getConnection();
+            stmt = con.createStatement();
+            String sql = "SELECT * FROM users";
+            rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                
+                
+                Admin emp = new Admin(id, name);
+                employees.add(emp);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return employees;
+    }
 
 }

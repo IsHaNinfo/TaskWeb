@@ -32,6 +32,42 @@
 	</servlet-mapping>
 	
 	
+	<!-- get all task -->
+	
+	<servlet>
+		<servlet-name>getalltask</servlet-name>
+		<servlet-class>com.taskmanage.GetAllTaskSeverlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>getalltask</servlet-name>
+		<url-pattern>/getalltask</url-pattern>
+	</servlet-mapping>
+	
+	
+		<!-- get all employees -->
+	
+	<servlet>
+		<servlet-name>getAllEmployees</servlet-name>
+		<servlet-class>com.taskmanage.getAllEmployeeSeverlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>getAllEmployees</servlet-name>
+		<url-pattern>/getallemployee</url-pattern>
+	</servlet-mapping>
+	
+		<!-- update task -->
+	
+	<servlet>
+		<servlet-name>update</servlet-name>
+		<servlet-class>com.taskmanage.UpdateTaskServelet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>update</servlet-name>
+		<url-pattern>/updatetask</url-pattern>
+	</servlet-mapping>
+	
+	
+	
 	
 	
 	
