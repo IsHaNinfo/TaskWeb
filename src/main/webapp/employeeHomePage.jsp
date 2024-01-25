@@ -4,6 +4,7 @@
 <head>
     <meta charset="ISO-8859-1">
     <title>Employee Home</title>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>	
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
@@ -86,84 +87,227 @@
         }
     </style>
 </head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
-    <div class="navbar-collapse justify-content-end">
-        <i class="navbar-user-icon fas fa-user" onclick="showUserDetails()"></i>
-    </div>
-</nav>
- <div class="status-name">
+<body onload="fetchDataFromServer()">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
+        <div class="navbar-collapse justify-content-end">
+            <i class="navbar-user-icon fas fa-user" onclick="showUserDetails()"></i>
+        </div>
+    </nav>
+    <div class="status-name">
         Task Status
     </div>
-<div class="shadow-card">
-   
-    <div class="task">
-        Create a program that generates and prints a random number between 1 and 100
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Select Status
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <a class="dropdown-item status-active" href="#" onclick="setStatus('Active')">Active</a>
-                <a class="dropdown-item status-resolve" href="#" onclick="setStatus('Resolve')">Resolve</a>
-                <a class="dropdown-item status-close" href="#" onclick="setStatus('Close')">Close</a>
-            </div>
-        </div>
+    <div class="shadow-card">
+        
     </div>
-    <div class="task">
-        Develop a script to read a text file, count the number of words, and print the result.
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Select Status
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                <a class="dropdown-item status-active" href="#" onclick="setStatus('Active')">Active</a>
-                <a class="dropdown-item status-resolve" href="#" onclick="setStatus('Resolve')">Resolve</a>
-                <a class="dropdown-item status-close" href="#" onclick="setStatus('Close')">Close</a>
-            </div>
-        </div>
-    </div>
-    <!-- Add more tasks as needed -->
-    
-    <div class="update-status-btn">
-        <button class="btn btn-info" value="Submit" style="background-color: #685CFE;">Update Status</button>
-    </div>
-</div>
+    <!-- Modal for each task -->
+ 				<div class="modal fade task-modal" id="taskModal${task.id}" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">		        <div class="modal-dialog" role="document">
+		            <div class="modal-content">
+		                <div class="modal-header">
+		                    <h5 class="modal-title" id="taskModalLabel">Task Details</h5>
+		                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		                        <span aria-hidden="true">&times;</span>
+		                    </button>
+		                </div>
+		                <form action="updatetask" method="post" id="editForm">
+		                <div class="modal-body">
+		                
+		                		<div class="form-group">
+					            <label for="editId">Task ID</label>
+					            <input type="text" class="form-control" id="editID" name="editID"  placeholder="${task.id}" value="${task.id}" readonly>
+					             <small id="emailHelp" class="form-text text-muted">Not editable</small>
+					          </div>
+							  <div class="form-group">
+							    <label for="taskName">Task name</label>
+							    <input type="text" class="form-control" id="editTaskName" name="editTaskName" placeholder="${task.taskname}" value="${task.taskname}" readonly>
+							    <small id="emailHelp" class="form-text text-muted">Not editable</small>
+							  </div>
+							  <div class="form-group">
+							    <label for="Description">Description</label>
+							    <input type="text" class="form-control" id="editDescription" name="editDescription" placeholder="${task.description}" value="${task.description}">
+							  </div>
+							  <div class="form-group">
+							    <label for="dueDate">Completion date</label>
+							    <input type="text" class="form-control" id="editDate" name="editDate" placeholder="${task.date}" value="${task.date}" readonly>
+							 	 
+							  </div>
+							  <div class="form-group">
+							    <label for="dueDate">Comment</label>
+							    <input type="text" class="form-control" id="editComment" name="editComment" placeholder="${task.comment}" value="${task.comment}">
+							  </div>
+							   <div class="form-group">
+							   <label for="status" >Current Status</label>
+								<input type="text" class="form-control" id="Status"  placeholder="${task.status}" value="${task.status}" readonly>
+								<small id="emailHelp" class="form-text text-muted">Not editable</small>
+							
+							   
+							    <label for="status">Select new status</label>
+							  	<select class="form-control" id="editStatus" name="editStatus">
+							  		<option>Active</option>
+							  		<option>Resolve</option>
+							  		<option>Close</option>
+							  	</select>
+							  </div>
+							   <div class="form-group">
+							    <input type="hidden" class="form-control" id="editUID" name="editUID" placeholder="${task.uid}" value="${task.uid}">
+							    <input type="hidden" class="form-control" id="employeePage" name="employeePage" placeholder="" value="employeePage">
+							  </div>
 
-<%
-    int adminId = (int) request.getAttribute("adminId");
-    System.out.println(adminId);// Now you can use the adminId in your database requests or other logic
-%>
+							
+		                </div>
+		              
+		                
+		                <div class="modal-footer">
+		                	<button type="button" class="btn btn-primary" onclick="submitForm()">Save changes</button>
+		                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		                </div>
+		                </form>
+		            </div>
+		        </div>
+		    </div>
 
-<script type="text/javascript">
-    console.log(adminId);
+    <!-- Your scriptlet to get user ID -->
+    <%
+        int uid = (int) request.getAttribute("userId");
+        System.out.println(uid); // Now you can use the userId in your JavaScript function
+    %>
 
-    function setStatus(status) {
-        var dropdown = event.target.closest('.dropdown');
-        // Update the text of the clicked dropdown button
-        dropdown.querySelector('.dropdown-toggle').innerText = status;
-        // Update the color of the clicked dropdown button
-        dropdown.querySelector('.dropdown-toggle').classList.remove('btn-secondary', 'btn-success', 'btn-info', 'btn-danger');
-        dropdown.querySelector('.dropdown-toggle').classList.add('btn-' + getStatusColorClass(status));
-        // Update the color of the clicked dropdown item
-        dropdown.querySelector('.dropdown-item').classList.remove('status-active', 'status-resolve', 'status-close');
-        dropdown.querySelector('.dropdown-item').classList.add('status-' + status.toLowerCase());
-    }
-
-    function getStatusColorClass(status) {
-        switch (status.toLowerCase()) {
-            case 'active':
-                return 'success';
-            case 'resolve':
-                return 'info';
-            case 'close':
-                return 'danger';
-            default:
-                return 'secondary';
+    <script>
+        function fetchDataFromServer() {
+            var userId = <%= uid %>; // Get the userId from JSP
+            console.log(userId);
+            // Send AJAX request to servlet
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "GetTaskByUserId?userId=" + userId, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Handle the response here if needed
+                    console.log(xhr.responseText);
+                    var responseData = JSON.parse(xhr.responseText);
+                    updateShadowCard(responseData);
+                }
+            };
+            xhr.send();
         }
-    }
-</script>
+
+        function setStatus(status) {
+            var dropdown = event.target.closest('.dropdown');
+            // Update the text of the clicked dropdown button
+            dropdown.querySelector('.dropdown-toggle').innerText = status;
+            // Update the color of the clicked dropdown button
+            dropdown.querySelector('.dropdown-toggle').classList.remove('btn-secondary', 'btn-success', 'btn-info', 'btn-danger');
+            dropdown.querySelector('.dropdown-toggle').classList.add('btn-' + getStatusColorClass(status));
+            // Update the color of the clicked dropdown item
+            dropdown.querySelector('.dropdown-item').classList.remove('status-active', 'status-resolve', 'status-close');
+            dropdown.querySelector('.dropdown-item').classList.add('status-' + status.toLowerCase());
+        }
+
+        function getStatusColorClass(status) {
+            switch (status.toLowerCase()) {
+                case 'active':
+                    return 'success';
+                case 'resolve':
+                    return 'info';
+                case 'close':
+                    return 'danger';
+                default:
+                    return 'secondary';
+            }
+        }
+        
+        function updateShadowCard(data) {
+            var shadowCardDiv = document.querySelector('.shadow-card');
+            // Clear previous content
+            shadowCardDiv.innerHTML = '';
+
+            // Create table element
+            var table = document.createElement('table');
+            table.classList.add('table');
+
+            // Create table header
+            var thead = document.createElement('thead');
+            var headerRow = document.createElement('tr');
+            var headers = ['Task Name', 'Description', 'Comment', 'Current Status', 'Action'];
+            headers.forEach(function(headerText) {
+                var th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Create table body
+            var tbody = document.createElement('tbody');
+            data.forEach(function(task) {
+                var row = document.createElement('tr');
+                // Populate table rows with task data
+                var taskData = [task.taskname, task.description, task.comment, task.status];
+                taskData.forEach(function(cellData) {
+                    var cell = document.createElement('td');
+                    cell.textContent = cellData;
+                    row.appendChild(cell);
+                });
+
+                // Create button for "View More & Update"
+                var viewMoreButtonCell = document.createElement('td');
+                var viewMoreButton = document.createElement('button');
+                viewMoreButton.textContent = 'View More & Update';
+                viewMoreButton.classList.add('btn', 'btn-info');
+                viewMoreButton.onclick = function() {
+                    openModal(task);
+                };
+                viewMoreButtonCell.appendChild(viewMoreButton);
+                row.appendChild(viewMoreButtonCell);
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+            shadowCardDiv.appendChild(table);
+        }
+
+        function openModal(task) {
+        	// Set modal content using task details
+            var modal = document.getElementById('taskModal');
+            modal.querySelector('#editID').value = task.id;
+            modal.querySelector('#editTaskName').value = task.taskname;
+            modal.querySelector('#editDescription').value = task.description;
+            modal.querySelector('#editDate').value = task.date;
+            modal.querySelector('#editComment').value = task.comment;
+            modal.querySelector('#Status').value = task.status;
+            modal.querySelector('#editUID').value = task.uid;
+
+            // Show the modal
+            $(modal).modal('show');
+
+        }
+		
+        function submitForm() {
+            // Get user-entered values
+            var taskName = document.getElementById("editTaskName").value;
+            var description = document.getElementById("editDescription").value;
+            var date = document.getElementById("editDate").value;
+            var comment = document.getElementById("editComment").value;
+            var status = document.getElementById("editStatus").value;
+            
+            var uid = document.getElementById("editUID").value;
+
+            // Check if the user entered new values, if not, set existing values
+            taskName = taskName === "" ? "${task.taskname}" : taskName;
+            description = description === "" ? "${task.description}" : description;
+            date = date === "" ? "${task.date}" : date;
+            comment = comment === "" ? "${task.comment}" : comment;
+
+            // Set the values back to the form fields
+            document.getElementById("editTaskName").value = taskName;
+            document.getElementById("editDescription").value = description;
+            document.getElementById("editDate").value = date;
+            document.getElementById("editComment").value = comment;
+            document.getElementById("editStatus").value = status; // Set existing status
+            document.getElementById("editUID").value = uid;
+
+            // Now you can submit the form
+            document.getElementById("editForm").submit();
+        }
+
+    </script>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
