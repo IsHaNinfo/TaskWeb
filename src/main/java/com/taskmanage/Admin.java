@@ -12,6 +12,12 @@ public class Admin {
 		this.password = password;
 		this.userRole = userRole;
 	}
+	
+	public Admin(int id ,String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
 
 	private int id;
 	private String name;
@@ -43,5 +49,6 @@ public class Admin {
 	public String getUserRole() {
 		return userRole;
 	}
-
+	
+	
 }
